@@ -2,7 +2,7 @@ module.exports = (grunt) ->
   ###
     Helper methods.
     The methods below use the 'module_file_order' Array in
-    'grunt.conf.js' to easily load modules in a consistent
+    'grunt.conf.coffee' to easily load modules in a consistent
     manner, generate globbing patterns or process files.
 
     (i.e. the 'index.html' is processed in order to
@@ -12,7 +12,7 @@ module.exports = (grunt) ->
 
   ###
     Generates a globbing pattern that matches the
-    'module_file_order' Array in 'grunt.conf.js'.
+    'module_file_order' Array in 'grunt.conf.coffee'.
 
     @param {String} modulePath - The module path
     @returns {Array} output - An Array of globbing patterns
@@ -31,7 +31,8 @@ module.exports = (grunt) ->
   ###
     'Manually globs (using 'node-glob')' for all JavaScript files
     that should be included in the build phase, then stores them
-    into the 'buildScripts' Array. 'buildScripts' is then passed  as 'scripts' to the template.
+    into the 'buildScripts' Array. 'buildScripts' is then passed
+    as 'scripts' to the template.
     The template is processed (usually loops through 'scripts').
     (See 'index.html')
 
@@ -40,7 +41,7 @@ module.exports = (grunt) ->
   ###
   processBuildScripts = (content) ->
     buildScripts = []
-    customModules = gruntConfig.build.vendor_js
+    customModules = gruntConfig.build.vendor_coffee
                     .concat(findModuleFilesIn('./src/app/'))
                     .concat(findModuleFilesIn('./src/common/'))
 
@@ -61,7 +62,7 @@ module.exports = (grunt) ->
   ###
     Include grunt configuration
   ###
-  gruntConfig = require( './config/grunt.conf.js' )
+  gruntConfig = require( './config/grunt.conf.coffee' )
 
   ###
     Helpers (preparing for grunt util deprecation)
@@ -126,7 +127,7 @@ module.exports = (grunt) ->
       See './src/index.html' for more details.
     ###
     copy:
-      build_app_js:
+      build_app_coffee:
         src: [
           findModuleFilesIn('./src/app/')
           findModuleFilesIn('./src/common/')
@@ -141,8 +142,8 @@ module.exports = (grunt) ->
       build_unit:
         src: ['./src/**/*.spec.js']
         dest: '<%= build_dir %>'
-      build_vendor_js:
-        src: ['<%= build.vendor_js %>']
+      build_vendor_coffee:
+        src: ['<%= build.vendor_coffee %>']
         dest: '<%= build_dir %>'
       build_views:
         cwd: './src'
@@ -277,6 +278,18 @@ module.exports = (grunt) ->
         dest: '<%= build_dir %>/src/assets/css/app.min.css'
 
     ###
+      This task allow writing less Angular boilerpate code
+      See more on https://github.com/CaryLandholt/ng-classify
+    ###
+    ngClassify:
+      build_classify:
+        src: [
+          findModuleFilesIn('./src/app/')
+          findModuleFilesIn('./src/common/')
+        ]
+        dest: '<%= build_dir %>'
+
+    ###
       The uglify task mainly minifies and mangles module scripts.
       After all scripts are concatenated, it minifies without
       mangling to remove comments, line breaks, etc that come
@@ -289,7 +302,7 @@ module.exports = (grunt) ->
           mangle:
             except: ['exceptionLoggingService']
         src: [
-          '<%= compile.vendor_js %>'
+          '<%= compile.vendor_coffee %>'
           findModuleFilesIn('./build/src/app/')
           findModuleFilesIn('./build/src/common/')
         ]
@@ -345,8 +358,8 @@ module.exports = (grunt) ->
       the CoffeeScript source and grunt files.
     ###
     coffeelint:
-      src_js: ['./src/**/*.js']
-      gruntfiles: ['./gruntfile.coffee', 'grunt.conf.js']
+      src_js: ['./src/**/*.coffee']
+      gruntfiles: ['./gruntfile.coffee', 'grunt.conf.coffee']
 
     ###
       Karma is used to run unit tests.
@@ -399,7 +412,11 @@ module.exports = (grunt) ->
         livereload: true
       src_js:
         files: ['./src/**/*.js', './src/**/*.json']
-        tasks: ['newer:coffeelint:src_js', 'newer:copy:build_app_js', 'copy:build_app_data']
+        tasks: [
+          'newer:coffeelint:src_js'
+          'newer:copy:build_app_coffee'
+          'copy:build_app_data'
+        ]
       src_html:
         files: ['./src/**/*.html', '!./src/index.html']
         tasks: ['newer:copy:build_views', 'copy:build_shared_views']
@@ -408,22 +425,35 @@ module.exports = (grunt) ->
         tasks: ['copy:build_index']
       src_stylesheets:
         files: ['./src/assets/**/*.less', './src/assets/**/*.css']
-        tasks: ['newer:less:build_less', 'cssmin:build_css', 'clean:build_css_clean', 'autoprefixer:build_autoprefix_css']
+        tasks: [
+          'newer:less:build_less'
+          'cssmin:build_css'
+          'clean:build_css_clean'
+          'autoprefixer:build_autoprefix_css'
+        ]
       src_assets:
-        files: ['./src/assets/**/*', '!./src/assets/**/*.less', '!./src/assets/**/*.css']
+        files: [
+          './src/assets/**/*'
+          '!./src/assets/**/*.less'
+          '!./src/assets/**/*.css'
+        ]
         tasks: ['newer:copy:build_assets']
       gruntfiles:
-        files: ['./gruntfile.coffee', 'grunt.conf.js']
+        files: ['./gruntfile.coffee', 'grunt.conf.coffee']
         tasks: ['newer:coffeelint:gruntfiles']
         options:
           livereload: false
       tests:
         files: ['src/**/*.spec.js', 'src/**/*.e2e.js', 'src/**/*.protractor.js']
-        tasks: ['newer:copy:build_karma', 'newer:copy:build_unit', 'newer:copy:build_protractor']
+        tasks: [
+          'newer:copy:build_karma'
+          'newer:copy:build_unit'
+          'newer:copy:build_protractor'
+        ]
 
   ###
     When initializing Grunt, it needs to be extended with the
-    'gruntConfig' object (imported from './config/grunt.conf.js')
+    'gruntConfig' object (imported from './config/grunt.conf.coffee')
   ###
   grunt.initConfig(
     grunt.util._.extend(gruntTasks, gruntConfig)
@@ -437,11 +467,12 @@ module.exports = (grunt) ->
   ###
   grunt.registerTask('default', ['build', 'karma:unit', 'watch'])
   grunt.registerTask('build', [
-    'clean:build_clean'
     'coffeelint'
-    'copy:build_app_js'
+    'clean:build_clean'
+    'ngClassify:build_classify'
+    'copy:build_app_coffee'
     'copy:build_app_data'
-    'copy:build_vendor_js'
+    'copy:build_vendor_coffee'
     'copy:build_views'
     'copy:build_shared_views'
     'copy:build_fonts'
@@ -456,7 +487,6 @@ module.exports = (grunt) ->
     'autoprefixer:build_autoprefix_css'
   ])
   grunt.registerTask('compile', [
-    'coffeelint'
     'build'
     'copy:compile_views'
     'html2js:compile_shared_views'
@@ -471,7 +501,10 @@ module.exports = (grunt) ->
   ])
   grunt.registerTask('test', ['karma:unit', 'protractor:build'])
   grunt.registerTask('test:unit', ['karma:unit'])
-  grunt.registerTask('test:ci', ['karma:unit', 'protractor:ci_dev', 'protractor:ci_prod'])
+  grunt.registerTask('test:ci', [
+    'karma:unit'
+    'protractor:ci_dev'
+    'protractor:ci_prod'])
   grunt.registerTask('test:e2e', ['protractor:build'])
   grunt.registerTask('dev', ['shell:dev_server'])
   grunt.registerTask('prod', ['shell:prod_server'])

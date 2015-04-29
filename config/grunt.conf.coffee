@@ -3,7 +3,6 @@ module.exports =
     Global configuration.
     These values are used in 'gruntfile.js', usually for globbing
     patterns. I.e. <%= build_dir %>
-
   ###
   source_dir: './src/'
   build_dir: './build/'
@@ -20,10 +19,9 @@ module.exports =
     The CSS files defined here will be concatenated and minified,
     together with the stylesheets present in '/assets'.
     'vendor_css' + 'src/assets' -> build/src/assets/app.min.css
-
   ###
   build:
-    vendor_js: [
+    vendor_coffee: [
       #written in 'index.html' in this order
       './vendor/angular/angular.js'
       './vendor/angular-ui-router/release/angular-ui-router.js'
@@ -48,7 +46,6 @@ module.exports =
     Note: This only applies to JavaScript files.
     The same advantages don't really apply to CSS, therefore we
     can include the minified versions in the build object.
-
   ###
   compile:
     vendor_min_js: [
@@ -58,7 +55,7 @@ module.exports =
       './vendor/stacktrace-js/dist/stacktrace.min.js'
       './vendor/loggly-jslogger/src/loggly.tracker.js'
     ]
-    vendor_js: [
+    vendor_coffee: [
       #doesn't have a min files, will minify
     ]
   ###
@@ -92,7 +89,6 @@ module.exports =
     ............................................................
       'copy:build_resource',
     ............................................................
-
   ###
   common:
     vendor_fonts: [
@@ -106,22 +102,21 @@ module.exports =
     The order of AngularJS modules is important because the app
     might be easily be broken if a Controller is defined before
     the module that contains it.
-
   ###
   module_file_order: [
     #Init files contain global configuration
-    '**/*.init.js',
+    '**/*.init.coffee',
     #Config files are used to define module dependecies on the root module after application bootstrap (using the 'pushAfterBootstrap' method). The config files also contain the module config block (angular.module('name').config()) and the constant blocks (angular.module('name').constant()).
-    '**/*.config.js',
+    '**/*.config.coffee',
     #Run blocks are used to execute code after the injector is created and are used to kickstart the application
-    '**/*.run.js',
-    #Services represent angular services, but also can also be a factory, provider or value. The rule of thumb is to always use 'file.service.js' for any of these components.
-    '**/*.service.js',
-    '**/*.factory.js',
-    '**/*.provider.js',
-    '**/*.value.js',
+    '**/*.run.coffee',
+    #Services represent angular services, but also can also be a factory, provider or value. The rule of thumb is to always use 'file.service.coffee' for any of these components.
+    '**/*.service.coffee',
+    '**/*.factory.coffee',
+    '**/*.provider.coffee',
+    '**/*.value.coffee',
     #After services come controllers and finally directives and filters
-    '**/*.controller.js',
-    '**/*.directive.js',
-    '**/*.filter.js'
+    '**/*.controller.coffee',
+    '**/*.directive.coffee',
+    '**/*.filter.coffee'
   ]
