@@ -1,7 +1,7 @@
 module.exports = (grunt) ->
   ###
     Helper methods.
-    The methods below use the 'module_file_order' Array in
+    The methods below use the 'module_coffee_order'/'module_js_order' Array in
     'grunt.conf.coffee' to easily load modules in a consistent
     manner, generate globbing patterns or process files.
 
@@ -12,19 +12,26 @@ module.exports = (grunt) ->
 
   ###
     Generates a globbing pattern that matches the
-    'module_file_order' Array in 'grunt.conf.coffee'.
+    'module_coffee_order'/'module_js_order' Array in 'grunt.conf.coffee'.
 
     @param {String} modulePath - The module path
+    @param {String} fileType - The file type to look for (leave empty for JS)
     @returns {Array} output - An Array of globbing patterns
 
     (i.e. findModuleFilesIn('./src/app/') loads all module
     files in './src/app' in the defined order)
   ###
-  findModuleFilesIn = (modulePath) ->
+  findModuleFilesIn = (modulePath, fileType) ->
     output = []
+    order
 
-    for globPath in gruntConfig.module_file_order
-      output.push(modulePath + gruntConfig.module_file_order[globPath])
+    if fileType is 'coffee'
+      order = gruntConfig.module_coffee_order
+    else
+      order = gruntConfig.module_js_order
+
+    for globPath in order
+      output.push(modulePath + globPath)
 
     return output
 
@@ -41,7 +48,7 @@ module.exports = (grunt) ->
   ###
   processBuildScripts = (content) ->
     buildScripts = []
-    customModules = gruntConfig.build.vendor_coffee
+    customModules = gruntConfig.build.vendor_js
                     .concat(findModuleFilesIn('./src/app/'))
                     .concat(findModuleFilesIn('./src/common/'))
 
@@ -127,12 +134,6 @@ module.exports = (grunt) ->
       See './src/index.html' for more details.
     ###
     copy:
-      build_app_coffee:
-        src: [
-          findModuleFilesIn('./src/app/')
-          findModuleFilesIn('./src/common/')
-        ]
-        dest: '<%= build_dir %>'
       build_app_data:
         src: ['./src/app/**/*.json']
         dest: '<%= build_dir %>/data/'
@@ -142,8 +143,8 @@ module.exports = (grunt) ->
       build_unit:
         src: ['./src/**/*.spec.js']
         dest: '<%= build_dir %>'
-      build_vendor_coffee:
-        src: ['<%= build.vendor_coffee %>']
+      build_vendor_js:
+        src: ['<%= build.vendor_js %>']
         dest: '<%= build_dir %>'
       build_views:
         cwd: './src'
@@ -284,10 +285,26 @@ module.exports = (grunt) ->
     ngClassify:
       build_classify:
         src: [
-          findModuleFilesIn('./src/app/')
-          findModuleFilesIn('./src/common/')
+          findModuleFilesIn('./src/app/', 'coffee')
+          findModuleFilesIn('./src/common/', 'coffee')
         ]
         dest: '<%= build_dir %>'
+        expand: true
+
+    ###
+      Compiles CoffeeScript files to JavaScript.
+    ###
+    coffee:
+      build_app_js:
+        src: [
+          findModuleFilesIn('./src/app/', 'coffee')
+          findModuleFilesIn('./src/common/', 'coffee')
+        ]
+        dest: '<%= build_dir %>'
+        expand: true
+        ext: '.js'
+        options:
+          bare: true
 
     ###
       The uglify task mainly minifies and mangles module scripts.
@@ -302,7 +319,7 @@ module.exports = (grunt) ->
           mangle:
             except: ['exceptionLoggingService']
         src: [
-          '<%= compile.vendor_coffee %>'
+          '<%= compile.vendor_js %>'
           findModuleFilesIn('./build/src/app/')
           findModuleFilesIn('./build/src/common/')
         ]
@@ -411,7 +428,7 @@ module.exports = (grunt) ->
       options:
         livereload: true
       src_js:
-        files: ['./src/**/*.js', './src/**/*.json']
+        files: ['./src/**/*.coffee', './src/**/*.json']
         tasks: [
           'newer:coffeelint:src_js'
           'newer:copy:build_app_coffee'
@@ -469,10 +486,8 @@ module.exports = (grunt) ->
   grunt.registerTask('build', [
     'coffeelint'
     'clean:build_clean'
-    'ngClassify:build_classify'
-    'copy:build_app_coffee'
     'copy:build_app_data'
-    'copy:build_vendor_coffee'
+    'copy:build_vendor_js'
     'copy:build_views'
     'copy:build_shared_views'
     'copy:build_fonts'
@@ -481,6 +496,8 @@ module.exports = (grunt) ->
     'copy:build_protractor'
     'copy:build_karma'
     'copy:build_assets'
+    'ngClassify:build_classify'
+    'coffee:build_app_js'
     'less:build_less'
     'cssmin:build_css'
     'clean:build_css_clean'

@@ -21,7 +21,7 @@ module.exports =
     'vendor_css' + 'src/assets' -> build/src/assets/app.min.css
   ###
   build:
-    vendor_coffee: [
+    vendor_js: [
       #written in 'index.html' in this order
       './vendor/angular/angular.js'
       './vendor/angular-ui-router/release/angular-ui-router.js'
@@ -55,7 +55,7 @@ module.exports =
       './vendor/stacktrace-js/dist/stacktrace.min.js'
       './vendor/loggly-jslogger/src/loggly.tracker.js'
     ]
-    vendor_coffee: [
+    vendor_js: [
       #doesn't have a min files, will minify
     ]
   ###
@@ -102,8 +102,30 @@ module.exports =
     The order of AngularJS modules is important because the app
     might be easily be broken if a Controller is defined before
     the module that contains it.
+
+    We need to look for both module_js & module_coffee:
+      module_js -> used for appending js files to index.html
+      module_coffee -> used for globing for source files (by ng-classify)
   ###
-  module_file_order: [
+  module_js_order: [
+    #Init files contain global configuration
+    '**/*.init.js',
+    #Config files are used to define module dependecies on the root module after application bootstrap (using the 'pushAfterBootstrap' method). The config files also contain the module config block (angular.module('name').config()) and the constant blocks (angular.module('name').constant()).
+    '**/*.config.js',
+    #Run blocks are used to execute code after the injector is created and are used to kickstart the application
+    '**/*.run.js',
+    #Services represent angular services, but also can also be a factory, provider or value. The rule of thumb is to always use 'file.service.js' for any of these components.
+    '**/*.service.js',
+    '**/*.factory.js',
+    '**/*.provider.js',
+    '**/*.value.js',
+    #After services come controllers and finally directives and filters
+    '**/*.controller.js',
+    '**/*.directive.js',
+    '**/*.filter.js'
+  ]
+
+  module_coffee_order: [
     #Init files contain global configuration
     '**/*.init.coffee',
     #Config files are used to define module dependecies on the root module after application bootstrap (using the 'pushAfterBootstrap' method). The config files also contain the module config block (angular.module('name').config()) and the constant blocks (angular.module('name').constant()).

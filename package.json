@@ -30,6 +30,7 @@
     "grunt-cli": "^0.1.13",
     "grunt-coffeelint": "0.0.13",
     "grunt-contrib-clean": "^0.6.0",
+    "grunt-contrib-coffee": "^0.13.0",
     "grunt-contrib-concat": "^0.5.0",
     "grunt-contrib-copy": "^0.7.0",
     "grunt-contrib-cssmin": "^0.12.2",
