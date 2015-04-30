@@ -192,7 +192,7 @@ module.exports = (grunt) ->
           process: processBuildScripts
       build_protractor:
         cwd: './src'
-        src: ['**/*.protractor.js', '**/*.e2e.js']
+        src: ['**/*.protractor.js', '**/*.e2e.coffee']
         dest: '<%= build_dir %>src/e2e/'
         expand: true
         flatten: true
@@ -481,7 +481,7 @@ module.exports = (grunt) ->
         options:
           livereload: false
       tests:
-        files: ['src/**/*.spec.js', 'src/**/*.e2e.js', 'src/**/*.protractor.js']
+        files: ['src/**/*.spec.js', 'src/**/*.e2e.coffee', 'src/**/*.protractor.coffee']
         tasks: [
           'newer:copy:build_karma'
           'newer:copy:build_unit'
