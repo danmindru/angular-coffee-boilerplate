@@ -14,8 +14,8 @@ absConfig = (->
   appRootModuleName = 'abs'
   appMainVendorDependencies = ['ui.router', 'sharedViewsModule']
 
-  pushAfterBootstrap = (lateModule) ->
-    angular.module(lateModule, [])
+  pushAfterBootstrap = (lateModule, dependencies) ->
+    angular.module(lateModule, dependencies || [])
     angular.module(appRootModuleName).requires.push(lateModule)
 
   return {
