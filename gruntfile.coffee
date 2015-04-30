@@ -21,16 +21,10 @@ module.exports = (grunt) ->
     (i.e. findModuleFilesIn('./src/app/') loads all module
     files in './src/app' in the defined order)
   ###
-  findModuleFilesIn = (modulePath, fileType) ->
+  findModuleFilesIn = (modulePath) ->
     output = []
-    order
 
-    if fileType is 'coffee'
-      order = gruntConfig.module_coffee_order
-    else
-      order = gruntConfig.module_js_order
-
-    for globPath in order
+    for globPath in gruntConfig.module_file_order
       output.push(modulePath + globPath)
 
     return output
@@ -59,6 +53,10 @@ module.exports = (grunt) ->
         buildScripts = buildScripts.concat(globFiles)
         return
     )
+
+    #replace coffee extension with js
+    for script, i in buildScripts
+      buildScripts[i] = script.replace('coffee', 'js')
 
     return grunt.template.process(content, {
       data: {
@@ -285,11 +283,14 @@ module.exports = (grunt) ->
     ngClassify:
       build_classify:
         src: [
-          findModuleFilesIn('./src/app/', 'coffee')
-          findModuleFilesIn('./src/common/', 'coffee')
+          findModuleFilesIn('./src/app/')
+          findModuleFilesIn('./src/common/')
         ]
         dest: '<%= build_dir %>'
         expand: true
+        options:
+          #Warning - the root module should also be updated in _app-main.init
+          appName: 'abs'
 
     ###
       Compiles CoffeeScript files to JavaScript.
@@ -297,14 +298,22 @@ module.exports = (grunt) ->
     coffee:
       build_app_js:
         src: [
-          findModuleFilesIn('./src/app/', 'coffee')
-          findModuleFilesIn('./src/common/', 'coffee')
+          findModuleFilesIn('src/app/')
+          findModuleFilesIn('src/common/')
         ]
+        cwd: '<%= build_dir %>'
         dest: '<%= build_dir %>'
         expand: true
-        ext: '.js'
         options:
           bare: true
+        rename:
+          (dest, src) ->
+            console.log(src)
+            folder = src.substring(0, src.lastIndexOf('/'))
+            filename = src.substring(src.lastIndexOf('/'), src.length)
+            filename = filename.substring(0, filename.lastIndexOf('.'))
+
+            return dest + folder + filename + '.js'
 
     ###
       The uglify task mainly minifies and mangles module scripts.
@@ -431,7 +440,8 @@ module.exports = (grunt) ->
         files: ['./src/**/*.coffee', './src/**/*.json']
         tasks: [
           'newer:coffeelint:src_js'
-          'newer:copy:build_app_coffee'
+          'ngClassify:build_classify'
+          'coffee:build_app_js'
           'copy:build_app_data'
         ]
       src_html:

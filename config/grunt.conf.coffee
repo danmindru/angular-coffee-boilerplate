@@ -107,25 +107,8 @@ module.exports =
       module_js -> used for appending js files to index.html
       module_coffee -> used for globing for source files (by ng-classify)
   ###
-  module_js_order: [
-    #Init files contain global configuration
-    '**/*.init.js',
-    #Config files are used to define module dependecies on the root module after application bootstrap (using the 'pushAfterBootstrap' method). The config files also contain the module config block (angular.module('name').config()) and the constant blocks (angular.module('name').constant()).
-    '**/*.config.js',
-    #Run blocks are used to execute code after the injector is created and are used to kickstart the application
-    '**/*.run.js',
-    #Services represent angular services, but also can also be a factory, provider or value. The rule of thumb is to always use 'file.service.js' for any of these components.
-    '**/*.service.js',
-    '**/*.factory.js',
-    '**/*.provider.js',
-    '**/*.value.js',
-    #After services come controllers and finally directives and filters
-    '**/*.controller.js',
-    '**/*.directive.js',
-    '**/*.filter.js'
-  ]
 
-  module_coffee_order: [
+  module_file_order: [
     #Init files contain global configuration
     '**/*.init.coffee',
     #Config files are used to define module dependecies on the root module after application bootstrap (using the 'pushAfterBootstrap' method). The config files also contain the module config block (angular.module('name').config()) and the constant blocks (angular.module('name').constant()).
