@@ -291,6 +291,8 @@ module.exports = (grunt) ->
         options:
           #Warning - the root module should also be updated in _app-main.init
           appName: 'abs'
+          controller:
+            format: 'upperCamelCase'
 
     ###
       Compiles CoffeeScript files to JavaScript.
