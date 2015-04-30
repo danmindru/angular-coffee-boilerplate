@@ -1,4 +1,4 @@
-class ProfileModel extends Controller('abs.profileFeature.providerIndex')
+class ProviderIndex extends Controller('abs.profileFeature.providerIndex')
   constructor: (ProviderModelService) ->
     vm = this
 

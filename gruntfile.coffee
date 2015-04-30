@@ -190,6 +190,10 @@ module.exports = (grunt) ->
         dest: '<%= build_dir %>'
         options:
           process: processBuildScripts
+      ###
+        Protractor helpers *.protractor are still used as JS,
+        due to compile issues ('by' not accepted)
+      ###
       build_protractor:
         cwd: './src'
         src: ['**/*.protractor.js', '**/*.e2e.coffee']
@@ -395,7 +399,7 @@ module.exports = (grunt) ->
       the CoffeeScript source and grunt files.
     ###
     coffeelint:
-      src_js: ['./src/**/*.coffee']
+      src_js: ['./src/**/*.coffee', '!./src/test/**/*']
       gruntfiles: ['./gruntfile.coffee', 'grunt.conf.coffee']
       options:
         max_line_length:

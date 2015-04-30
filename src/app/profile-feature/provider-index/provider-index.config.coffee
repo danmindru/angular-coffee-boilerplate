@@ -1,1 +1,1 @@
-absConfig.pushAfterBootstrap('abs.profileFeature.providerIndex')
+absConfig.pushAfterBootstrap('abs.profileFeature.providerIndex', [])

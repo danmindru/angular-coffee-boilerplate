@@ -1,4 +1,4 @@
-class CustomerIndexController extends Controller('abs.profileFeature.customerIndex')
+class CustomerIndex extends Controller('abs.profileFeature.customerIndex')
   constructor: (CustomerModelService) ->
     vm = this
 
