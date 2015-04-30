@@ -1,4 +1,4 @@
-absConfig.pushAfterBootstrap('abs.about')
+absConfig.pushAfterBootstrap('abs.about', [])
 
 class About extends Config('abs.about')
   constructor: ($stateProvider) ->
