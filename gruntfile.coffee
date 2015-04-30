@@ -393,6 +393,9 @@ module.exports = (grunt) ->
     coffeelint:
       src_js: ['./src/**/*.coffee']
       gruntfiles: ['./gruntfile.coffee', 'grunt.conf.coffee']
+      options:
+        max_line_length:
+          level: 'ignore'
 
     ###
       Karma is used to run unit tests.
