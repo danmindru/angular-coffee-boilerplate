@@ -15,7 +15,7 @@ module.exports = (grunt) ->
     'module_coffee_order'/'module_js_order' Array in 'grunt.conf.coffee'.
 
     @param {String} modulePath - The module path
-    @param {String} fileType - The file type to look for (leave empty for JS)
+    @param {Bool} isJS - true if the output will have the JS extension
     @returns {Array} output - An Array of globbing patterns
 
     (i.e. findModuleFilesIn('./src/app/') loads all module
