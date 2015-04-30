@@ -307,6 +307,7 @@ module.exports = (grunt) ->
           findModuleFilesIn('src/app/')
           findModuleFilesIn('src/common/')
           '**/*.spec.coffee'
+          '**/*.e2e.coffee'
         ]
         cwd: '<%= build_dir %>'
         dest: '<%= build_dir %>'
