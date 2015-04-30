@@ -139,7 +139,7 @@ module.exports = (grunt) ->
         flatten: true
         filter: 'isFile'
       build_unit:
-        src: ['./src/**/*.spec.js']
+        src: ['./src/**/*.spec.coffee']
         dest: '<%= build_dir %>'
       build_vendor_js:
         src: ['<%= build.vendor_js %>']
@@ -302,6 +302,7 @@ module.exports = (grunt) ->
         src: [
           findModuleFilesIn('src/app/')
           findModuleFilesIn('src/common/')
+          '**/*.spec.coffee'
         ]
         cwd: '<%= build_dir %>'
         dest: '<%= build_dir %>'
