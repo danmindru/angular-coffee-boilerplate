@@ -297,6 +297,8 @@ module.exports = (grunt) ->
           appName: 'abs'
           controller:
             format: 'upperCamelCase'
+          service:
+            format: 'upperCamelCase'
 
     ###
       Compiles CoffeeScript files to JavaScript.
