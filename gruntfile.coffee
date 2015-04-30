@@ -21,11 +21,15 @@ module.exports = (grunt) ->
     (i.e. findModuleFilesIn('./src/app/') loads all module
     files in './src/app' in the defined order)
   ###
-  findModuleFilesIn = (modulePath) ->
+  findModuleFilesIn = (modulePath, isJS) ->
     output = []
 
     for globPath in gruntConfig.module_file_order
       output.push(modulePath + globPath)
+
+    if isJS
+      for script, i in output
+        output[i] = script.replace('coffee', 'js')
 
     return output
 
@@ -332,8 +336,8 @@ module.exports = (grunt) ->
             except: ['exceptionLoggingService']
         src: [
           '<%= compile.vendor_js %>'
-          findModuleFilesIn('./build/src/app/')
-          findModuleFilesIn('./build/src/common/')
+          findModuleFilesIn('./build/src/app/', true)
+          findModuleFilesIn('./build/src/common/', true)
         ]
         dest: '<%= compile_dir %>/src/app/modules.min.js'
       compile_soft_uglify:
