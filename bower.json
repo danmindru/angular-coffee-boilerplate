@@ -1,12 +1,15 @@
 {
-  "name": "angular-boilerplate-study",
+  "name": "angular-coffee-boilerplate",
   "homepage": "http://abs.danmind.ru",
-  "repository": "https://github.com/danmindru/angular-boilerplate-study",
-  "description": "A study of AngularJS modularity & organization",
+  "repository": "https://github.com/danmindru/angular-coffee-boilerplate",
+  "description": "A study of AngularJS modularity & organization, written in CoffeeScript",
   "keywords": [
     "AngularJS",
     "boilerplate",
-    "module"
+    "module",
+    "coffee",
+    "CoffeeScript",
+    "ngClassify"
   ],
   "authors": [
     "Dan Mindru"

@@ -12,4 +12,5 @@ before_script:
 - npm install
 - bower install
 - grunt build
+- grunt shell:update_selenium
 script: grunt test:ci
