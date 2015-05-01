@@ -136,6 +136,10 @@ module.exports = (grunt) ->
       See './src/index.html' for more details.
     ###
     copy:
+      #This task also moves all JS to build
+      build_app_js:
+        src: ['./src/**/*.js']
+        dest: '<%= build_dir %>'
       build_app_data:
         src: ['./src/app/**/*.json']
         dest: '<%= build_dir %>/data/'
@@ -514,6 +518,7 @@ module.exports = (grunt) ->
   grunt.registerTask('build', [
     'coffeelint'
     'clean:build_clean'
+    'copy:build_app_js'
     'copy:build_app_data'
     'copy:build_vendor_js'
     'copy:build_views'
