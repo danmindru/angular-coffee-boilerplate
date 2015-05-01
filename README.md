@@ -1,5 +1,5 @@
 #AngularJS CoffeeScript boilerplate
-[![Build Status](https://travis-ci.org/danmindru/angular-coffee-boilerplate.svg?branch=master)](https://travis-ci.org/danmindru/angular-coffee-boilerplate) [![devDependency Status](https://david-dm.org/angular-coffee-boilerplate/dev-status.svg)](https://david-dm.org/danmindru/angular-coffee-boilerplate#info=devDependencies&view=table)
+[![Build Status](https://travis-ci.org/danmindru/angular-coffee-boilerplate.svg?branch=master)](https://travis-ci.org/danmindru/angular-coffee-boilerplate) [![devDependency Status](https://david-dm.org/danmindru/angular-coffee-boilerplate/dev-status.svg)](https://david-dm.org/danmindru/angular-coffee-boilerplate#info=devDependencies&view=table)
 
 This boilerplate is based on [this project](https://github.com/danmindru/angular-boilerplate-study).
 
