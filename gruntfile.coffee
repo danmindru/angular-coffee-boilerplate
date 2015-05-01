@@ -430,9 +430,8 @@ module.exports = (grunt) ->
       To run locally, 'grunt test', 'grunt test:e2e' and
       'grunt protractor:build' will do the job.
 
-      It also contains configuration for Travis CI.
-      Both '/build' (development) and '/application' (
-      production) paths are covered.
+      Don't forget to update the selenium driver
+      (see the shell task).
     ###
     protractor:
       options:
@@ -443,12 +442,6 @@ module.exports = (grunt) ->
         options:
           keepAlive: true
           configFile: './config/protractor.conf.js' # Local tests
-      ci_dev:
-        options:
-          configFile: './config/protractor-ci.conf.js'
-      ci_prod:
-        options:
-          configFile: './config/protractor-ci-prod.conf.js'
 
     ###
       The `watch` task builds JavaScript, HTML and all assets
@@ -551,10 +544,7 @@ module.exports = (grunt) ->
   ])
   grunt.registerTask('test', ['karma:unit', 'protractor:build'])
   grunt.registerTask('test:unit', ['karma:unit'])
-  grunt.registerTask('test:ci', [
-    'karma:unit'
-    'protractor:ci_dev'
-    'protractor:ci_prod'])
+  grunt.registerTask('test:ci', ['karma:unit'])
   grunt.registerTask('test:e2e', ['protractor:build'])
   grunt.registerTask('dev', ['shell:dev_server'])
   grunt.registerTask('prod', ['shell:prod_server'])
