@@ -55,7 +55,7 @@ class Root extends Controller
       vm.htmlTitle = pageTitle
     )
     ###
-      Same as for changed
+      Same as for changedTitle
     ###
     $scope.$on('changedDesc', (event, pageDesc) ->
       vm.htmlDesc = pageDesc
